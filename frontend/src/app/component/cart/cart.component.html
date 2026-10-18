@@ -1,0 +1,51 @@
+  <h2 class="text-2xl font-bold mb-6">Shopping Cart</h2>
+    
+  <ng-container *ngIf="cartItems$ | async as cartItems">
+    <div class="flex flex-col lg:flex-row gap-8">
+      <div class="flex-grow">
+        <div *ngFor="let item of cartItems" class="flex items-center gap-4 py-6 border-b">
+          <img [src]="item.menuItem.imageUrl" [alt]="item.menuItem.name" class="w-24 h-24 object-cover">
+          <div class="flex-grow">
+            <h3 class="text-lg font-semibold">{{ item.menuItem.name }}</h3>
+            <p class="font-semibold mt-1">${{ item.menuItem.price.toFixed(2) }}</p>
+            <p *ngIf="item.menuItem.stock > 0" class="text-green-600 text-sm mt-1">
+              In stock ({{ item.menuItem.stock }} available)
+            </p>
+            <p *ngIf="item.menuItem.stock === 0" class="text-red-600 text-sm mt-1">
+              Out of stock
+            </p>
+          </div>
+          <div class="flex items-center gap-4">
+            <input type="number" [(ngModel)]="item.quantity" (ngModelChange)="updateQuantity(item.menuItem.menuItemId, $event)" min="1" max="10" class="border p-2 w-16">
+            <button (click)="removeFromCart(item.menuItem.menuItemId)" class="text-gray-400 hover:text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="lg:w-1/3">
+        <div class="bg-gray-50 p-6 rounded-md">
+          <h2 class="text-xl font-semibold mb-4">Order summary</h2>
+          <div class="flex justify-between mb-2">
+            <span>Subtotal</span>
+            <span>${{ getSubtotal(cartItems).toFixed(2) }}</span>
+          </div>
+          <div class="flex justify-between mb-4">
+            <span>Tax estimate</span>
+            <span>${{ getTaxEstimate(getSubtotal(cartItems)).toFixed(2) }}</span>
+          </div>
+          <div class="flex justify-between font-semibold text-lg">
+            <span>Order total</span>
+            <span>${{ getOrderTotal(getSubtotal(cartItems)).toFixed(2) }}</span>
+          </div>
+          <button (click)="checkout(cartItems)" class="w-full bg-gray-800 text-white py-3 mt-6 hover:bg-gray-600 transition duration-300 rounded-md">
+            Checkout
+          </button>
+          <p *ngIf="checkoutError" class="text-red-600 mt-2">{{ checkoutError }}</p>
+        </div>
+      </div>
+    </div>
+  </ng-container>

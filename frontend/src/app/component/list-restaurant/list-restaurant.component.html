@@ -1,0 +1,61 @@
+<div class="mb-6 flex items-center space-x-2 w-1/2">
+  <input type="text" placeholder="Search for coffee shops..." [(ngModel)]="keyword" (input)="onSearch()"
+    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+  <button *ngIf="keyword" (click)="clearSearch()"
+    class="px-2"
+    aria-label="Clear search">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+      class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+    </svg>
+  </button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
+  <h2 class="col-span-full text-2xl font-bold mb-4">All coffee shops</h2>
+  <div *ngFor="let restaurant of restaurants"
+    class="bg-white rounded-md shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300"
+    (click)="goToRestaurantDetail(restaurant.restaurantId)">
+    <div class="relative">
+      <img [src]="restaurant.image" class="w-full h-36 object-cover" [alt]="restaurant.name">
+      <!-- <span *ngIf="restaurant.promo" class="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-sm font-semibold">Promo</span> -->
+    </div>
+    <div class="p-4">
+      <h3 class="text-lg font-bold mb-1">{{ restaurant.name }}</h3>
+      <p class="text-sm text-gray-500 mb-1">{{ restaurant.address }}</p>
+      <div class="flex items-center text-sm text-gray-500">
+        <!-- <span class="flex items-center mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    {{ restaurant.rating }}
+          
+                </span> -->
+        <!-- <span class="mr-4">{{ restaurant.deliveryTime }} mins</span> -->
+        <!-- <span>{{ restaurant.distance }} km</span> -->
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<div class="flex mt-4 space-x-2 py-4">
+  <button (click)="previousPage()" [disabled]="isFirstPage()"
+    class="w-10 h-10 flex items-center justify-center bg-gray-300 rounded-md disabled:bg-gray-200 ">
+    <span aria-hidden="true">&lsaquo;</span>
+  </button>
+
+  <!-- Page Numbers (Square buttons) -->
+  <ng-container *ngFor="let page of [].constructor(totalPages); let i = index">
+    <button (click)="goToPage(i)" [class]="currentPage === i 
+          ? 'w-10 h-10 flex items-center justify-center bg-gray-800 text-white rounded-md' 
+          : 'w-10 h-10 flex items-center justify-center bg-gray-300 rounded-md'">
+      {{ i + 1 }}
+    </button>
+  </ng-container>
+
+  <!-- Next Button -->
+  <button (click)="nextPage()" [disabled]="isLastPage()"
+    class="w-10 h-10 flex items-center justify-center bg-gray-300 rounded-md disabled:bg-gray-200">
+    <span aria-hidden="true">&rsaquo;</span>
+  </button>
+</div>

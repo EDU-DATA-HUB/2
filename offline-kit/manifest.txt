@@ -1,0 +1,15 @@
+Food Order offline-kit
+Created: updated for offline build (maven.zip + m2.zip)
+
+prereqs/
+DockerDesktopInstaller.zip
+wsl.x64.msi
+
+app.zip
+docker-images.zip
+jdk-11.zip
+jdk-17.zip
+jdk-8.zip
+m2.zip
+maven.zip
+node.zip

@@ -1,0 +1,62 @@
+<div class="flex flex-col min-h-screen">
+    <header class="bg-white text-gray-700 p-4 border-b-2 border-gray-400">
+        <nav class="container mx-auto grid grid-cols-12 px-40">
+            <div class="col-span-4 flex items-center">
+                <div class="text-2xl font-bold">O-COFFEE</div>
+            </div>
+            <div class="col-span-4 flex justify-center items-center">
+                <div class="space-x-4">
+                    <a href="/" class="hover:text-blue-300 px-2">Home</a>
+                    <a href="/" class="hover:text-blue-300 px-2">About</a>
+                    <a href="/" class="hover:text-blue-300 px-2">Discover</a>
+                </div>
+            </div>
+            <div class="col-span-4 flex justify-end items-center">
+                <div class="space-x-6">
+                    <a routerLink="/cart" class="hover:text-blue-300 relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="h-6 w-6 inline">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                        </svg>
+                        
+                        <span *ngIf="cartItemCount$ | async as count"
+                            class="absolute -top-3 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                            {{ count }}
+                        </span>
+                    </a>
+                    <!-- Kiểm tra trạng thái đăng nhập -->
+                    <ng-container *ngIf="isLoggedIn; else loggedOutTemplate">
+                        <a routerLink="/profile"><span  class="text-gray-800 font-bold">Hi, {{ currentUser }}</span></a>
+                        <button (click)="logout()" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                            Logout 
+                        </button>
+                    </ng-container>
+
+                    <!-- Mẫu cho người dùng chưa đăng nhập -->
+                    <ng-template #loggedOutTemplate>
+                        <button routerLink="/login"
+                            class="bg-gray-800 text-white px-7 py-2 rounded-md hover:bg-gray-600">
+                            Sign In
+                        </button>
+                    </ng-template>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-1 p-4 bg-gray-100">
+        <div class="container mx-auto px-40 ">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+
+    <footer class="bg-white text-gray-700 p-4 border-t-2 border-gray-400">
+        <div class="container mx-auto grid grid-cols-12">
+            <div class="col-span-12 text-center">
+                <p>© 2024 Restaurant List. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</div>

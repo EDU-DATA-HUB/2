@@ -1,0 +1,6 @@
+# Local mail credentials (optional)
+# Copy to notification-service and set a Gmail App Password if you want real emails.
+# Without this, orders/auth still work; welcome/reset emails are skipped or fail softly.
+
+# spring.mail.username=your-gmail@gmail.com
+# spring.mail.password=your-app-password

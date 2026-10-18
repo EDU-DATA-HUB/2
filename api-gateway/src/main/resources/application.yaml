@@ -1,0 +1,96 @@
+spring:
+  application:
+    name: api-gateway
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+  cloud:
+    gateway:
+      routes:
+        - id: restaurant-service
+          uri: ${RESTAURANT_SERVICE_URI:http://localhost:8082}
+          predicates:
+            - Path=/api/v1/restaurants/**, /api/v1/menu-items/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: restaurantCircuitBreaker
+                fallbackUri: forward:/fallback/restaurant
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10 # 10 request mỗi giây
+                redis-rate-limiter.burstCapacity: 50 # có thể chứa tối đa 20 request tại bất kỳ thời điểm nào.
+                redis-rate-limiter.requestedTokens: 1 # mỗi request sẽ tiêu tốn 1 token
+        - id: order-service
+          uri: ${ORDER_SERVICE_URI:http://localhost:8083}
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: orderCircuitBreaker
+                fallbackUri: forward:/fallback/order
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 50
+                redis-rate-limiter.requestedTokens: 1
+        - id: user-service
+          uri: ${USER_SERVICE_URI:http://localhost:8081}
+          predicates:
+            - Path=/api/v1/users/**, /api/v1/auth/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userCircuitBreaker
+                fallbackUri: forward:/fallback/user
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 50
+                redis-rate-limiter.requestedTokens: 1
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 10s
+        timeoutDuration: 5s
+        failureRateThreshold: 50
+    instances:
+      restaurantCircuitBreaker:
+        baseConfig: default
+      orderCircuitBreaker:
+        baseConfig: default
+      userCircuitBreaker:
+        baseConfig: default
+
+server:
+  port: 9000
+
+#eureka
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true
+
+# Management endpoint exposure for monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true

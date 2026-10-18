@@ -1,0 +1,10 @@
+# Docker profile: only auth URL + eureka off (routes/redis via env placeholders)
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+
+auth:
+  service:
+    url: http://user-service:8081/api/v1/auth/validateToken

@@ -1,0 +1,80 @@
+<div class="bg-white">
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+        {{ errorMessage }}
+    </div>
+
+    <div class="px-4 py-3 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">
+            {{isEditMode ? 'Edit' : 'Add'}} User
+        </h2>
+    </div>
+
+    <!-- Form content -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 px-4 py-3">
+        <!-- Username -->
+        <div>
+            <label for="username" class="block font-medium text-gray-700 mb-1">Username</label>
+            <input type="text" id="username" formControlName="username"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <div *ngIf="form.get('username')?.touched && form.get('username')?.errors" class="text-red-500 mt-1">
+                <div *ngIf="form.get('username')?.errors?.['required']">Username is required</div>
+                <div *ngIf="form.get('username')?.errors?.['minlength']">Username must be at least 3 characters</div>
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+            <label for="email" class="block font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="email" formControlName="email"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <div *ngIf="form.get('email')?.touched && form.get('email')?.errors" class="text-red-500 mt-1">
+                <div *ngIf="form.get('email')?.errors?.['required']">Email is required</div>
+                <div *ngIf="form.get('email')?.errors?.['email']">Invalid email format</div>
+            </div>
+        </div>
+
+        <!-- Password -->
+        <div *ngIf="!isEditMode">
+            <label for="password" class="block font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="password" formControlName="password"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <div *ngIf="form.get('password')?.touched && form.get('password')?.errors" class="text-red-500 mt-1">
+                <div *ngIf="form.get('password')?.errors?.['required']">Password is required</div>
+                <div *ngIf="form.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div>
+            <label for="address" class="block font-medium text-gray-700 mb-1">Address</label>
+            <textarea id="address" formControlName="address"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+        </div>
+
+        <!-- Roles -->
+        <div>
+            <label class="block font-medium text-gray-700 mb-1">Roles</label>
+            <div *ngFor="let role of availableRoles" class="flex items-center">
+                <input type="checkbox" [checked]="form.get('roles')?.value.includes(role)" (change)="toggleRole(role)"
+                    class="mr-2">
+                <label>{{ role }}</label>
+            </div>
+        </div>
+
+        <!-- Active -->
+        <div class="flex items-center">
+            <input type="checkbox" formControlName="isActive" class="mr-2">
+            <label>Active</label>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-end">
+            <button type="button" (click)="close.emit()"
+                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md mr-2">Cancel</button>
+            <button type="submit" [disabled]="isLoading" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+                {{ isLoading ? 'Saving...' : isEditMode ? 'Update' : 'Create' }}
+            </button>
+        </div>
+    </form>
+</div>

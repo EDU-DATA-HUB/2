@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        /* Reset & Layout */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header, .footer {
+            background-color: #4CAF50;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        /* Main Text */
+        h1, h2 {
+            color: #4CAF50;
+            margin-top: 0;
+        }
+        p {
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        /* Order Details */
+        .order-info, .items-list {
+            margin: 20px 0;
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .order-info ul, .items-list ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .order-info li, .items-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .items-list li:last-child, .order-info li:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>Order Confirmation</h1>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h2>Thank you for your order!</h2>
+        <p>Dear <strong th:text="${recipientName}">Customer</strong>,</p>
+        <p>Your order <strong>#<span th:text="${orderId}">12345</span></strong> has been successfully placed on
+            <span th:text="${orderDate}">October 31, 2024</span>.</p>
+
+        <!-- Order Summary -->
+        <div class="order-info">
+            <h3>Order Summary</h3>
+            <ul>
+                <li><strong>Recipient Name:</strong> <span th:text="${recipientName}">John Doe</span></li>
+                <li><strong>Shipping Address:</strong> <span th:text="${shippingAddress}">123 Main St, Springfield</span></li>
+                <li><strong>Contact Phone:</strong> <span th:text="${contactPhone}">+1234567890</span></li>
+                <li><strong>Total Amount:</strong> $<span th:text="${totalAmount}">99.99</span></li>
+            </ul>
+        </div>
+
+        <!-- Order Items -->
+        <div class="items-list">
+            <h3>Items Ordered</h3>
+            <ul>
+                <li th:each="item : ${items}">
+                    <span>
+                        <strong th:text="${item.quantity}"></strong> x
+                        <span th:text="${item.menuItemId}"></span>
+                    </span>
+                    <span>$<span th:text="${item.subtotal}"></span></span>
+                </li>
+            </ul>
+        </div>
+
+        <p>We appreciate your business and hope you enjoy your purchase!</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Your Company Name | All Rights Reserved</p>
+    </div>
+</div>
+</body>
+</html>
